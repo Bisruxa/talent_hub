@@ -19,7 +19,9 @@
     "custom-env": "^2.0.6",
     "dotenv": "^17.2.1",
     "express": "^5.1.0",
+    "express-validator": "^7.2.1",
     "helmet": "^8.1.0",
+    "jose": "^6.0.13",
     "jsonwebtoken": "^9.0.2",
     "mongoose": "^8.17.2",
     "morgan": "^1.10.1",
@@ -38,9 +40,6 @@
     "typescript": "^5.9.2"
   },
   "prisma": {
-  "seed": "ts-node-esm prisma/seed.ts"
-}
-
-
-  
+    "seed": "ts-node-esm prisma/seed.ts"
+  }
 }
