@@ -51,10 +51,10 @@ export interface Job {
     userId: string;
     createdAt: string;
   }>;
-  appliedByUser: boolean; // true if current user applied
+  appliedByUser: boolean; 
 }
 
-// ✅ Fetch all jobs
+
 export const getJobs = () => {
   return fetcher<{ jobs: Job[] }>("/api/jobs");
 };

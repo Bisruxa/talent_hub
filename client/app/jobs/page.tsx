@@ -1,6 +1,6 @@
 "use client";
 import { useEffect, useState } from "react";
-import { getJobs, Job } from "../../lib/mutation";
+import { getJobs, type Job } from "../../lib/mutation";
 import { FaSun, FaMoon, FaSearch, FaCalendarAlt } from "react-icons/fa";
 
 const HomeDashboard = () => {
@@ -10,6 +10,7 @@ const HomeDashboard = () => {
   const [darkMode, setDarkMode] = useState(false);
   const [search, setSearch] = useState("");
   const [selectedRoles, setSelectedRoles] = useState<string[]>([]);
+  
 
   useEffect(() => {
     getJobs()
@@ -116,62 +117,48 @@ const HomeDashboard = () => {
             Jobs Listed
           </h2>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {(loading || error ? skeletons : filteredJobs).map(
-              (job: any, idx: number) => (
-                <div
-                  key={loading || error ? idx : job.id}
-                  className="p-4 rounded-xl shadow-lg hover:shadow-2xl transition-shadow duration-300 bg-white"
-                >
-                  {/* Company Logo */}
-                  {!(loading || error) && (
+            {loading || error
+              ? skeletons.map((_, idx) => (
+                  <div
+                    key={idx}
+                    className="p-4 rounded-xl shadow-lg animate-pulse bg-white"
+                  >
+                    <div className="w-12 h-12 mb-2 rounded-full bg-gray-300" />
+                    <div className="h-5 bg-gray-300 rounded mb-2 w-3/4" />
+                    <div className="h-3 bg-gray-300 rounded mb-4 w-full" />
+                    <div className="h-8 bg-gray-300 rounded w-full" />
+                  </div>
+                ))
+              : filteredJobs.map((job) => (
+                  <div
+                    key={job.id}
+                    className="p-4 rounded-xl shadow-lg hover:shadow-2xl transition-shadow duration-300 bg-white"
+                  >
                     <img
                       src={job.logo || "https://via.placeholder.com/50"}
                       alt={`${job.title} logo`}
                       className="w-12 h-12 mb-2 rounded-full object-cover"
                     />
-                  )}
-
-                  <div
-                    className="h-5 bg-gray-300 rounded mb-2 w-3/4 animate-pulse"
-                    style={{ display: loading || error ? "block" : "none" }}
-                  />
-                  <div
-                    className="h-3 bg-gray-300 rounded mb-4 w-full animate-pulse"
-                    style={{ display: loading || error ? "block" : "none" }}
-                  />
-
-                  {!loading && !error && (
-                    <>
-                      <h3 className="text-lg font-bold mb-1">{job.title}</h3>
-                      <p className="text-gray-700 mb-2">{job.description}</p>
-                      <div className="flex items-center gap-2 mt-2 text-gray-500">
-                        <FaCalendarAlt />{" "}
-                        <span>
-                          {new Date(job.createdAt).toLocaleDateString()}
-                        </span>
-                      </div>
-                    </>
-                  )}
-
-                  <button
-                    className="mt-3 px-3 py-1 rounded transition-colors w-full font-semibold"
-                    style={{ backgroundColor: "#10B981", color: "#FFFFFF" }}
-                    disabled={
-                      loading ||
-                      error ||
-                      job.appliedByUser ||
-                      job.createByUser?.id === localStorage.getItem("userId")
-                    }
-                  >
-                    {loading || error
-                      ? ""
-                      : job.appliedByUser
-                      ? "Applied"
-                      : "Apply"}
-                  </button>
-                </div>
-              )
-            )}
+                    <h3 className="text-lg font-bold mb-1">{job.title}</h3>
+                    <p className="text-gray-700 mb-2">{job.description}</p>
+                    <div className="flex items-center gap-2 mt-2 text-gray-500">
+                      <FaCalendarAlt />{" "}
+                      <span>
+                        {new Date(job.createdAt).toLocaleDateString()}
+                      </span>
+                    </div>
+                    <button
+                      className="mt-3 px-3 py-1 rounded transition-colors w-full font-semibold"
+                      style={{ backgroundColor: "#10B981", color: "#FFFFFF" }}
+                      disabled={
+                        job.appliedByUser ||
+                        job.createByUser?.id === localStorage.getItem("userId")
+                      }
+                    >
+                      {job.appliedByUser ? "Applied" : "Apply"}
+                    </button>
+                  </div>
+                ))}
           </div>
         </main>
       </div>
