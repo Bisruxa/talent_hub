@@ -14,6 +14,7 @@ export interface JobCardProps {
     createdAt: string;
     appliedByUser?: boolean;
     createByUser?: { id: string };
+    _count?: { Applications: number };
   };
 }
 
@@ -59,15 +60,19 @@ const JobCard = ({ job }: JobCardProps) => {
         <FaCalendarAlt />
         <span>{new Date(job.createdAt).toLocaleDateString()}</span>
       </div>
+      <p className="text-gray-600 text-sm mt-2">
+        {job._count?.Applications ?? 0} applicant(s)
+      </p>
 
       {/* Apply Button */}
       <button
         onClick={() => setShowModal(true)}
         disabled={isDisabled}
         className={`mt-4 w-full py-2 rounded font-semibold transition-all duration-150
-          ${applied 
-            ? "bg-gray-400 text-gray-700 cursor-not-allowed"
-            : "bg-green-500 text-white hover:bg-green-600 active:translate-y-1 active:shadow-inner"
+          ${
+            applied
+              ? "bg-gray-400 text-gray-700 cursor-not-allowed"
+              : "bg-green-500 text-white hover:bg-green-600 active:translate-y-1 active:shadow-inner"
           }`}
       >
         {applied ? "Applied" : "Apply"}

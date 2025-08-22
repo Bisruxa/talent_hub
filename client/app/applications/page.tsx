@@ -25,7 +25,7 @@ const MyApplicationsPage = () => {
       <Sidebar
         search={search}
         setSearch={setSearch}
-        selectedRoles={selectedRoles}
+        // selectedRoles={selectedRoles}
         // toggleRole={toggleRole}
       />
       <main className="flex-1 p-6 ml-64">
