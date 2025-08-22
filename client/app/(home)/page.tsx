@@ -27,7 +27,7 @@ const LandingPage = () => {
 
       <div className="flex flex-col md:flex-row items-center justify-center h-full px-32 gap-8">
         <div className="flex-1 space-y-6 text-center md:text-left">
-          <h1 className="text-5xl md:text-6xl font-bold text-gray-900 leading-tight">
+          <h1 className="text-3xl md:text-6xl font-bold text-gray-900 leading-tight">
             Where Talent Finds Opportunity
           </h1>
           <p className="text-lg md:text-xl text-gray-600">
