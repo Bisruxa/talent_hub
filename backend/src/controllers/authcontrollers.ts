@@ -6,12 +6,8 @@ import prisma from "../db.ts";
 export const register = async (req: Request, res: Response) => {
   try {
     const { email,name, password,role} = req.body;
-
-    // Hash password with configurable rounds
     const saltRounds = parseInt(process.env.BCRYPT_SALT_ROUNDS || "12");
     const hashedPassword = await bcrypt.hash(password, saltRounds);
-
-    // Create user in database
     const newUser = await prisma.users.create({
       data: {
         email,
@@ -24,15 +20,14 @@ export const register = async (req: Request, res: Response) => {
         email: true,
         name: true,
         createdAt: true,
+        role:true,
       },
     });
-
-    // Generate JWT for auto-login
     const token = await generateToken({
       id: newUser.id,
       email: newUser.email,
       name: newUser.name,
-     
+     role:newUser.role
     });
 
     res.status(201).json({
@@ -70,13 +65,15 @@ const user = await prisma.users.findFirst({
       id: user.id,
       email: user.email,
       name:user.name,
+      role:user.role,
     })
  res.json({
       message: 'Login successful',
       user: {
         id: user.id,
         email: user.email,
-        name: user.name
+        name: user.name,
+        role:user.role
        
       },
       token,

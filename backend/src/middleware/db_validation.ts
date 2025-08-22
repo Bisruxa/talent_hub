@@ -12,7 +12,7 @@ export const createUserSchema = z.object({
 export const createJobSchema = z.object({
   title: z.string().min(2).max(100),
   description: z.string().max(1000),
-  createBy: z.string().uuid(), 
+  // createBy: z.string().uuid(), 
 });
 
 // application
