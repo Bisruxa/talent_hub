@@ -4,6 +4,7 @@ import { createJob, getJobs, deleteJob, type Job } from "@/lib/mutation";
 import { useRouter } from "next/navigation";
 import toast, { Toaster } from "react-hot-toast";
 import { FaSun, FaMoon, FaCalendarAlt, FaPlus, FaTimes } from "react-icons/fa";
+import JobCard from "../../components/cards"; 
 
 export default function EmployerDashboard() {
   const [title, setTitle] = useState("");

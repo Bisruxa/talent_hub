@@ -1,7 +1,9 @@
 "use client";
 import { useEffect, useState } from "react";
 import { getJobs, type Job } from "../../lib/mutation";
-import { FaSun, FaMoon, FaSearch, FaCalendarAlt } from "react-icons/fa";
+import { FaSun, FaMoon } from "react-icons/fa";
+import Sidebar from "../components/sidebar";
+import JobCard from "../components/cards";
 
 const HomeDashboard = () => {
   const [jobs, setJobs] = useState<Job[]>([]);
@@ -10,7 +12,6 @@ const HomeDashboard = () => {
   const [darkMode, setDarkMode] = useState(false);
   const [search, setSearch] = useState("");
   const [selectedRoles, setSelectedRoles] = useState<string[]>([]);
-  
 
   useEffect(() => {
     getJobs()
@@ -20,15 +21,19 @@ const HomeDashboard = () => {
   }, []);
 
   const toggleRole = (role: string) => {
+    const normalized = role.toLowerCase();
     setSelectedRoles((prev) =>
-      prev.includes(role) ? prev.filter((r) => r !== role) : [...prev, role]
+      prev.includes(normalized)
+        ? prev.filter((r) => r !== normalized)
+        : [...prev, normalized]
     );
   };
 
   const filteredJobs = jobs.filter(
     (job) =>
       job.title.toLowerCase().includes(search.toLowerCase()) &&
-      (selectedRoles.length === 0 || selectedRoles.includes(job.role))
+      (selectedRoles.length === 0 ||
+        selectedRoles.includes(job.role?.toLowerCase()))
   );
 
   const skeletons = Array.from({ length: 6 });
@@ -40,47 +45,15 @@ const HomeDashboard = () => {
       } min-h-screen flex`}
     >
       {/* Sidebar */}
-      <aside className="w-64 p-6 border-r border-gray-300">
-        <h3 className="text-lg font-bold mb-4" style={{ color: "#1E40AF" }}>
-          Filters
-        </h3>
-
-        {/* Search */}
-        <div className="mb-6 relative">
-          <FaSearch className="absolute top-3 left-3 text-gray-400" />
-          <input
-            type="text"
-            placeholder="Search jobs..."
-            value={search}
-            onChange={(e) => setSearch(e.target.value)}
-            className="pl-10 pr-3 py-2 border-none rounded-md w-full focus:outline-none focus:ring-2 focus:ring-blue-800"
-          />
-        </div>
-
-        {/* Role Checkboxes */}
-        <div className="mb-4">
-          <label className="block mb-2 font-medium">Role</label>
-          <div className="flex flex-col gap-2">
-            {["Frontend", "Backend", "Fullstack"].map((role) => (
-              <label
-                key={role}
-                className="flex items-center gap-2 cursor-pointer"
-              >
-                <input
-                  type="checkbox"
-                  checked={selectedRoles.includes(role)}
-                  onChange={() => toggleRole(role)}
-                  className="accent-blue-800"
-                />
-                <span className="font-extrabold text-blue-800">{role}</span>
-              </label>
-            ))}
-          </div>
-        </div>
-      </aside>
+      <Sidebar
+        search={search}
+        setSearch={setSearch}
+        selectedRoles={selectedRoles}
+        toggleRole={toggleRole}
+      />
 
       {/* Main content */}
-      <div className="flex-1 flex flex-col">
+      <div className="flex-1 flex flex-col ml-64">
         {/* Header */}
         <header className="flex justify-between items-center p-4 border-b border-gray-300">
           <h2 className="text-3xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-blue-800 to-emerald-500 border-b-4 border items-center justify-center py-1">
@@ -129,36 +102,7 @@ const HomeDashboard = () => {
                     <div className="h-8 bg-gray-300 rounded w-full" />
                   </div>
                 ))
-              : filteredJobs.map((job) => (
-                  <div
-                    key={job.id}
-                    className="p-4 rounded-xl shadow-lg hover:shadow-2xl transition-shadow duration-300 bg-white"
-                  >
-                    <img
-                      src={job.logo || "https://via.placeholder.com/50"}
-                      alt={`${job.title} logo`}
-                      className="w-12 h-12 mb-2 rounded-full object-cover"
-                    />
-                    <h3 className="text-lg font-bold mb-1">{job.title}</h3>
-                    <p className="text-gray-700 mb-2">{job.description}</p>
-                    <div className="flex items-center gap-2 mt-2 text-gray-500">
-                      <FaCalendarAlt />{" "}
-                      <span>
-                        {new Date(job.createdAt).toLocaleDateString()}
-                      </span>
-                    </div>
-                    <button
-                      className="mt-3 px-3 py-1 rounded transition-colors w-full font-semibold"
-                      style={{ backgroundColor: "#10B981", color: "#FFFFFF" }}
-                      disabled={
-                        job.appliedByUser ||
-                        job.createByUser?.id === localStorage.getItem("userId")
-                      }
-                    >
-                      {job.appliedByUser ? "Applied" : "Apply"}
-                    </button>
-                  </div>
-                ))}
+              : filteredJobs.map((job) => <JobCard key={job.id} job={job} />)}
           </div>
         </main>
       </div>
