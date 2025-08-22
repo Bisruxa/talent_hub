@@ -1,7 +1,7 @@
 import AuthForm from '../../components/auth'
 
-const Signup = () => {
-  return <AuthForm mode="signup" />;
+const Signin = () => {
+  return <AuthForm mode="signin"  />;
 };
 
-export default Signup;
+export default Signin;

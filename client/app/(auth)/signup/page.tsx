@@ -1,7 +1,13 @@
 import AuthForm from "../../components/auth";
 
-const Signin = () => {
-  return <AuthForm mode="signin" />;
+const Signup = () => {
+
+  return (
+    <div className="bg-white h-screen">
+      <AuthForm mode="signup" />;
+    </div>
+  );
+  
 };
 
-export default Signin;
+export default Signup;
