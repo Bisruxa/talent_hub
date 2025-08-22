@@ -5,6 +5,7 @@ import morgan from 'morgan'
 import {env,isDev,isTestEnv} from '../env.ts'
 import authRoutes from './routes/authRoutes.ts'
 import jobRoutes from './routes/jobRoutes.ts'
+import applicationRoutes from './routes/applicationRoutes.ts'
 const app = express()
 app.use(express.json())
 app.use(express.urlencoded({extended:true}))
@@ -24,5 +25,6 @@ app.get('/health',(req,res)=>{
 })
 app.use('/auth',authRoutes)
 app.use('/api',jobRoutes)
+app.use('/api',applicationRoutes)
 export {app}
 export default app
