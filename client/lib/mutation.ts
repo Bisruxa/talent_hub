@@ -28,8 +28,7 @@ export interface CreateJobInput {
 }
 
 export const createJob = (body: CreateJobInput) => {
-  // Token automatically attached via fetcher
-  return fetcher("/jobs", body);
+  return fetcher("/api/jobs", body);
 };
 
 export interface Job {
@@ -51,10 +50,14 @@ export interface Job {
     userId: string;
     createdAt: string;
   }>;
-  appliedByUser: boolean; 
+  appliedByUser: boolean;
 }
 
-
 export const getJobs = () => {
-  return fetcher<{ jobs: Job[] }>("/api/jobs");
+  return fetcher<{ jobs: Job[] }>("/api/jobs", undefined, "GET");
+};
+
+// Add the deleteJob function
+export const deleteJob = (id: string) => {
+  return fetcher(`/api/jobs/:${id}`, undefined, "DELETE");
 };

@@ -45,7 +45,13 @@ console.log("Signup payload:", payload);
    try {
     console.log("Signup payload:", payload);
      await auth(mode, payload);
-     router.push("/jobs");
+     if(payload.role === "applicant")
+     {
+router.push("/jobs");
+     }
+     else{
+      router.push("/job/create");
+     }
    } catch (err) {
      if (err instanceof Error) setError(err.message);
    } finally {
@@ -92,7 +98,7 @@ console.log("Signup payload:", payload);
                 required
               >
                 <option value="">Select Role</option>
-                <option value="employee">Employee</option>
+                <option value="employer">Employee</option>
                 <option value="applicant">Applicant</option>
               </select>
             </>

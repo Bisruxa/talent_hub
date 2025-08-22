@@ -1,19 +1,24 @@
 export default async function fetcher<TResponse, TRequest = undefined>(
   url: string,
-  data?: TRequest
+  data?: TRequest,
+  method: string = data ? "POST" : "GET"
 ): Promise<TResponse> {
   const backendUrl = "http://localhost:3001";
   const token =
     typeof window !== "undefined" ? localStorage.getItem("token") : null;
 
-  const res = await fetch(`${backendUrl}${url}`, {
-    method: data ? "POST" : "GET",
+  const config: RequestInit = {
+    method,
     headers: {
       "Content-Type": "application/json",
       ...(token ? { Authorization: `Bearer ${token}` } : {}),
     },
-    body: data ? JSON.stringify(data) : undefined,
-  });
+  };
+  if (data && method !== "GET" && method !== "HEAD" && method !== "DELETE") {
+    config.body = JSON.stringify(data);
+  }
+
+  const res = await fetch(`${backendUrl}${url}`, config);
 
   if (!res.ok) {
     const errData = await res.json().catch(() => ({}));
