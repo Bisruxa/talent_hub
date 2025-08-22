@@ -27,6 +27,9 @@ export const getJobs = async (req: AuthRequest, res: Response) => {
     const userId = req.user!.id;
     const jobs = await prisma.jobs.findMany({
       include: {
+        _count: {
+          select: { Applications: true }, 
+        },
         Applications: true,
         createByUser: {
           select: {
@@ -100,3 +103,4 @@ export const deletJob = async (req: AuthRequest, res: Response) => {
     res.status(500).json({ error: "Failed to delete job" });
   }
 };
+
