@@ -1,4 +1,7 @@
-export default async function fetcher(url: string, data?: any) {
+export default async function fetcher<TResponse, TRequest = undefined>(
+  url: string,
+  data?: TRequest
+): Promise<TResponse> {
   const backendUrl = "http://localhost:3001";
   const token =
     typeof window !== "undefined" ? localStorage.getItem("token") : null;
@@ -12,10 +15,10 @@ export default async function fetcher(url: string, data?: any) {
     body: data ? JSON.stringify(data) : undefined,
   });
 
-  if (res.status < 200 || res.status >= 400) {
+  if (!res.ok) {
     const errData = await res.json().catch(() => ({}));
     throw new Error(errData.error || "Network response was not ok");
   }
 
-  return res.json();
+  return res.json() as Promise<TResponse>;
 }

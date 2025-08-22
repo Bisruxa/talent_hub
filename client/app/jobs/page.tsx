@@ -6,7 +6,8 @@ interface Job {
   id: string;
   title: string;
   description: string;
-  date: string; // added job posted date
+  role: string;
+  date: string;
 }
 
 const mockJobs: Job[] = [
@@ -14,24 +15,28 @@ const mockJobs: Job[] = [
     id: "1",
     title: "Frontend Developer",
     description: "React, Tailwind, JS",
+    role: "Frontend",
     date: "2025-08-20",
   },
   {
     id: "2",
     title: "Backend Developer",
     description: "Node.js, Express, Prisma",
+    role: "Backend",
     date: "2025-08-19",
   },
   {
     id: "3",
     title: "Fullstack Developer",
     description: "React + Node.js",
+    role: "Fullstack",
     date: "2025-08-18",
   },
   {
     id: "4",
     title: "Fullstack Developer",
     description: "React + Node.js",
+    role: "Fullstack",
     date: "2025-08-17",
   },
 ];
@@ -39,6 +44,19 @@ const mockJobs: Job[] = [
 const HomeDashboard = () => {
   const [darkMode, setDarkMode] = useState(false);
   const [search, setSearch] = useState("");
+  const [selectedRoles, setSelectedRoles] = useState<string[]>([]);
+
+  const toggleRole = (role: string) => {
+    setSelectedRoles((prev) =>
+      prev.includes(role) ? prev.filter((r) => r !== role) : [...prev, role]
+    );
+  };
+
+  const filteredJobs = mockJobs.filter(
+    (job) =>
+      job.title.toLowerCase().includes(search.toLowerCase()) &&
+      (selectedRoles.length === 0 || selectedRoles.includes(job.role))
+  );
 
   return (
     <div
@@ -51,7 +69,9 @@ const HomeDashboard = () => {
         <h3 className="text-lg font-bold mb-4" style={{ color: "#1E40AF" }}>
           Filters
         </h3>
-        <div className="mb-4 relative">
+
+        {/* Search */}
+        <div className="mb-6 relative">
           <FaSearch className="absolute top-3 left-3 text-gray-400" />
           <input
             type="text"
@@ -59,31 +79,39 @@ const HomeDashboard = () => {
             value={search}
             onChange={(e) => setSearch(e.target.value)}
             className="pl-10 pr-3 py-2 border rounded-md w-full focus:outline-none focus:ring-2"
-            style={{ borderColor: "#1E40AF", focus: { ringColor: "#1E40AF" } }}
+            style={{ borderColor: "#1E40AF" }}
           />
         </div>
+
+        {/* Role Checkboxes */}
         <div className="mb-4">
           <label className="block mb-2 font-medium">Role</label>
-          <select
-            className="w-full border rounded-md px-3 py-2 focus:outline-none focus:ring-2"
-            style={{ borderColor: "#1E40AF" }}
-          >
-            <option value="">All</option>
-            <option value="Frontend">Frontend</option>
-            <option value="Backend">Backend</option>
-            <option value="Fullstack">Fullstack</option>
-          </select>
+          <div className="flex flex-col gap-2">
+            {["Frontend", "Backend", "Fullstack"].map((role) => (
+              <label
+                key={role}
+                className="flex items-center gap-2 cursor-pointer"
+              >
+                <input
+                  type="checkbox"
+                  checked={selectedRoles.includes(role)}
+                  onChange={() => toggleRole(role)}
+                  className="accent-blue-800"
+                />
+                <span className="text-gray-700 dark:text-gray-300">{role}</span>
+              </label>
+            ))}
+          </div>
         </div>
-        {/* Add more filters as needed */}
       </aside>
 
       {/* Main Content */}
       <div className="flex-1">
         {/* Header */}
         <header className="flex justify-between items-center p-4 border-b border-gray-300">
-          <div className="text-2xl font-bold" style={{ color: "#1E40AF" }}>
-            TalentHub
-          </div>
+          <h2 className="text-3xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-blue-800 to-emerald-500 border-b-4 border items-center justify-center py-1">
+            Talent Hub
+          </h2>
           <div className="flex items-center gap-4">
             <button
               onClick={() => setDarkMode(!darkMode)}
@@ -115,39 +143,35 @@ const HomeDashboard = () => {
             Jobs Listed
           </h2>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {mockJobs
-              .filter((job) =>
-                job.title.toLowerCase().includes(search.toLowerCase())
-              )
-              .map((job) => (
-                <div
-                  key={job.id}
-                  className="p-4 border rounded-md shadow hover:shadow-lg transition-shadow duration-200"
-                  style={{
-                    backgroundColor: darkMode ? "#1F2937" : "#FFFFFF",
-                    borderColor: "#E5E7EB",
-                  }}
+            {filteredJobs.map((job) => (
+              <div
+                key={job.id}
+                className="p-4 border rounded-md shadow hover:shadow-lg transition-shadow duration-200"
+                style={{
+                  backgroundColor: darkMode ? "#1F2937" : "#FFFFFF",
+                  borderColor: "#E5E7EB",
+                }}
+              >
+                <h3
+                  className="text-lg font-bold mb-1"
+                  style={{ color: "#1E40AF" }}
                 >
-                  <h3
-                    className="text-lg font-bold mb-1"
-                    style={{ color: "#1E40AF" }}
-                  >
-                    {job.title}
-                  </h3>
-                  <p className="text-gray-600 dark:text-gray-300">
-                    {job.description}
-                  </p>
-                  <div className="flex items-center gap-2 mt-2 text-gray-500">
-                    <FaCalendarAlt /> <span>{job.date}</span>
-                  </div>
-                  <button
-                    className="mt-3 px-3 py-1 rounded transition-colors"
-                    style={{ backgroundColor: "#10B981", color: "#FFFFFF" }}
-                  >
-                    Apply
-                  </button>
+                  {job.title}
+                </h3>
+                <p className="text-gray-600 dark:text-gray-300">
+                  {job.description}
+                </p>
+                <div className="flex items-center gap-2 mt-2 text-gray-500">
+                  <FaCalendarAlt /> <span>{job.date}</span>
                 </div>
-              ))}
+                <button
+                  className="mt-3 px-3 py-1 rounded transition-colors"
+                  style={{ backgroundColor: "#10B981", color: "#FFFFFF" }}
+                >
+                  Apply
+                </button>
+              </div>
+            ))}
           </div>
         </main>
       </div>
