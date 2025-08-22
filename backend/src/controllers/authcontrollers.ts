@@ -5,7 +5,7 @@ import prisma from "../db.ts";
 
 export const register = async (req: Request, res: Response) => {
   try {
-    const { email,name, password} = req.body;
+    const { email,name, password,role} = req.body;
 
     // Hash password with configurable rounds
     const saltRounds = parseInt(process.env.BCRYPT_SALT_ROUNDS || "12");
@@ -17,7 +17,7 @@ export const register = async (req: Request, res: Response) => {
         email,
         name: name, 
         password: hashedPassword, 
-        role: "applicant", 
+        role: role, 
       },
       select: {
         id: true,

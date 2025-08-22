@@ -4,7 +4,7 @@ import helmet from 'helmet'
 import morgan from 'morgan'
 import {env,isDev,isTestEnv} from '../env.ts'
 import authRoutes from './routes/authRoutes.ts'
-
+import jobRoutes from './routes/jobRoutes.ts'
 const app = express()
 app.use(express.json())
 app.use(express.urlencoded({extended:true}))
@@ -23,5 +23,6 @@ app.get('/health',(req,res)=>{
   })
 })
 app.use('/auth',authRoutes)
+app.use('/api',jobRoutes)
 export {app}
 export default app
