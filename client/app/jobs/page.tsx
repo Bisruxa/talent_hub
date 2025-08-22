@@ -4,6 +4,7 @@ import { getJobs, type Job } from "../../lib/mutation";
 import { FaSun, FaMoon } from "react-icons/fa";
 import Sidebar from "../components/sidebar";
 import JobCard from "../components/cards";
+import Header from "../components/header";
 
 const HomeDashboard = () => {
   const [jobs, setJobs] = useState<Job[]>([]);
@@ -48,14 +49,14 @@ const HomeDashboard = () => {
       <Sidebar
         search={search}
         setSearch={setSearch}
-        selectedRoles={selectedRoles}
-        toggleRole={toggleRole}
+        buttonLabel="My Applications"
+        myApplicationsLink="/applications"
       />
 
       {/* Main content */}
       <div className="flex-1 flex flex-col ml-64">
         {/* Header */}
-        <header className="flex justify-between items-center p-4 border-b border-gray-300">
+        {/* <header className="flex justify-between items-center p-4 border-b border-gray-300">
           <h2 className="text-3xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-blue-800 to-emerald-500 border-b-4 border items-center justify-center py-1">
             Talent Hub
           </h2>
@@ -79,7 +80,8 @@ const HomeDashboard = () => {
               <span className="font-medium">Elkan</span>
             </div>
           </div>
-        </header>
+        </header> */}
+        <Header></Header>
 
         {/* Jobs Grid */}
         <main className="p-6 flex-1 overflow-auto">

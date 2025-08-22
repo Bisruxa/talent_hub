@@ -61,3 +61,16 @@ export const getJobs = () => {
 export const deleteJob = (id: string) => {
   return fetcher(`/api/jobs/:${id}`, undefined, "DELETE");
 };
+
+// fetch applications
+export const getMyApplications = () => {
+  return fetcher<{ jobs: Job[] }>(
+    "/api/applications",
+    undefined,
+    "GET"
+  );
+};
+// Apply for a job using fetcher
+export const applyJob = (jobId: string, note?: string) => {
+  return fetcher("/api/applications", { jobId, note }, "POST");
+};
