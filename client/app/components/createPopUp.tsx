@@ -31,8 +31,11 @@ const CreateJobModal = ({
       setDescription("");
       if (onCreated) onCreated();
       onClose();
-    } catch (err: any) {
-      toast.error(err.message || "Failed to create job");
+    } catch (err) {
+      if(err instanceof Error){
+toast.error(err.message || "Failed to create job");
+      }
+      
     } finally {
       setLoading(false);
     }

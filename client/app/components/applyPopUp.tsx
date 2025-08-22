@@ -32,8 +32,10 @@ const ApplyModal = ({
 
       if (onApplied) onApplied();
       onClose();
-    } catch (err: any) {
-      setError(err.message || "Failed to apply");
+    } catch (err) {
+      if(err instanceof Error){
+setError(err.message || "Failed to apply");
+      }
     } finally {
       setLoading(false);
     }
