@@ -201,3 +201,19 @@ Notes
 
 Authentication: All protected endpoints require the Authorization header with the JWT token.
 
+Use this Accounts to Test the website 
+Applicant
+``json
+email: "applicant1@talenthub.com",
+ password:"password123",
+``
+Employee
+```json
+email: "employer3@talenthub.com",
+password:"password123",
+```
+Admin
+```json
+email: "admin@talenthub.com",
+ password:"password123",
+```
