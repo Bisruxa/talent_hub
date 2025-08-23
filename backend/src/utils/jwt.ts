@@ -1,15 +1,16 @@
-import { SignJWT } from "jose";
+import { SignJWT, type JWTPayload } from "jose";
 import { createSecretKey } from "crypto";
 import env from "../../env.js";
 
-export interface JwtPayload {
+// Extend jose's JWTPayload with your custom fields
+export interface MyJWTPayload extends JWTPayload {
   id: string;
   email: string;
   name: string;
-  role:string;
+  role: string;
 }
 
-export const generateToken = (payload: JwtPayload): Promise<string> => {
+export const generateToken = (payload: MyJWTPayload): Promise<string> => {
   const secret = env.JWT_SECRET;
   const secretKey = createSecretKey(secret, "utf-8");
 
