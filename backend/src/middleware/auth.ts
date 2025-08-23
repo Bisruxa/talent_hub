@@ -1,14 +1,22 @@
 import type { Request, Response, NextFunction } from "express";
-import { jwtVerify } from "jose";
-import env from '../../env.js';
+import { jwtVerify, type JWTPayload } from "jose";
+import env from "../../env.js";
 
 export interface AuthRequest extends Request {
   user?: {
     id: string;
     email: string;
     name: string;
-    role: string; // add role
+    role: string;
   };
+}
+
+// Define your custom payload type
+interface MyJWTPayload extends JWTPayload {
+  id: string;
+  email: string;
+  name: string;
+  role: string;
 }
 
 export const authenticate = async (
@@ -28,11 +36,14 @@ export const authenticate = async (
       new TextEncoder().encode(env.JWT_SECRET)
     );
 
+    // Type assertion with your custom interface
+    const myPayload = payload as MyJWTPayload;
+
     req.user = {
-      id: (payload as any).id,
-      email: (payload as any).email,
-      name: (payload as any).name,
-      role: (payload as any).role, 
+      id: myPayload.id,
+      email: myPayload.email,
+      name: myPayload.name,
+      role: myPayload.role,
     };
 
     next();
@@ -41,4 +52,3 @@ export const authenticate = async (
     return res.status(401).json({ error: "Invalid Token" });
   }
 };
-
