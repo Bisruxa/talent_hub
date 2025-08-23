@@ -12,7 +12,9 @@
     "verbatimModuleSyntax": true,
     "isolatedModules": true,
     "skipLibCheck": true,
-    "allowImportingTsExtensions": true
+    "noEmit": false, 
+    // "allowImportingTsExtensions": true,
+    "esModuleInterop": true 
   },
   "include": ["src"]
 }
