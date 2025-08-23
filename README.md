@@ -203,10 +203,13 @@ Authentication: All protected endpoints require the Authorization header with th
 
 Use this Accounts to Test the website 
 Applicant
-``json
+
+```json
+{
 email: "applicant1@talenthub.com",
- password:"password123",
-``
+password:"password123",
+}
+```
 Employee
 ```json
 email: "employer3@talenthub.com",
