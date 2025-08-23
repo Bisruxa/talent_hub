@@ -1,6 +1,6 @@
 import prisma from "../db.js";
 import type { Response } from "express";
-import type { AuthRequest } from "../middleware/auth.ts";
+import type { AuthRequest } from "../middleware/auth.js";
 export const applyForJob = async (req: AuthRequest, res: Response) => {
   try {
     const userId = req.user?.id;

@@ -1,6 +1,6 @@
 import type { Response } from "express";
 import prisma from "../db.js";
-import type { AuthRequest } from "../middleware/auth.ts";
+import type { AuthRequest } from "../middleware/auth.js";
 
 export const createJob = async (req: AuthRequest, res: Response) => {
   console.log("req.user:", req.user);
