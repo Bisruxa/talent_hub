@@ -9,13 +9,14 @@
     "rootDir": "./",
     "strict": true,
     "jsx": "react-jsx",
-    "verbatimModuleSyntax": true,
+    
     "isolatedModules": true,
     "skipLibCheck": true,
-    "noEmit": false, 
-   
-    "esModuleInterop": true ,
+    "noEmit": false,
 
+    "esModuleInterop": true,
+    "verbatimModuleSyntax": false, // ← Add this
+    "preserveValueImports": false
   },
   "include": ["src","env.ts"]
 }
