@@ -3,7 +3,7 @@ export default async function fetcher<TResponse, TRequest = undefined>(
   data?: TRequest,
   method: string = data ? "POST" : "GET"
 ): Promise<TResponse> {
-  const backendUrl = "http://localhost:3001";
+  const backendUrl = "https://talent-hub-zm8m.onrender.com";
   const token =
     typeof window !== "undefined" ? localStorage.getItem("token") : null;
 
