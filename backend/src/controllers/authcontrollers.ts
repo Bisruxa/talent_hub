@@ -1,7 +1,7 @@
 import type { Request, Response } from "express";
 import bcrypt from "bcrypt";
-import { generateToken } from "../utils/jwt.ts";
-import prisma from "../db.ts"; 
+import { generateToken } from "../utils/jwt.js";
+import prisma from "../db.js"; 
 
 export const register = async (req: Request, res: Response) => {
   try {

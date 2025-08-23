@@ -2,10 +2,10 @@ import express from 'express'
 import cors from 'cors'
 import helmet from 'helmet'
 import morgan from 'morgan'
-import {env,isDev,isTestEnv} from '../env.ts'
-import authRoutes from './routes/authRoutes.ts'
-import jobRoutes from './routes/jobRoutes.ts'
-import applicationRoutes from './routes/applicationRoutes.ts'
+import {env,isDev,isTestEnv} from '../env.js'
+import authRoutes from './routes/authRoutes.js'
+import jobRoutes from './routes/jobRoutes.js'
+import applicationRoutes from './routes/applicationRoutes.js'
 const app = express()
 app.use(express.json())
 app.use(express.urlencoded({extended:true}))

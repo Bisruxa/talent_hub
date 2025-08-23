@@ -1,4 +1,4 @@
-import prisma from "../db.ts";
+import prisma from "../db.js";
 import type { Response } from "express";
 import type { AuthRequest } from "../middleware/auth.ts";
 export const applyForJob = async (req: AuthRequest, res: Response) => {

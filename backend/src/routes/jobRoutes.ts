@@ -1,9 +1,9 @@
 import { Router } from "express";
-import { validateBody } from "../middleware/validation.ts";
+import { validateBody } from "../middleware/validation.js";
 import {z} from 'zod'
-import { createJobSchema } from "../middleware/db_validation.ts";
-import {createJob, deletJob, getJobs} from "../controllers/jobcontrollers.ts";
-import { authenticate } from "../middleware/auth.ts";
+import { createJobSchema } from "../middleware/db_validation.js";
+import {createJob, deletJob, getJobs} from "../controllers/jobcontrollers.js";
+import { authenticate } from "../middleware/auth.js";
 const router = Router()
 router.get('/jobs',authenticate,getJobs)
 router.post('/jobs',authenticate, validateBody(createJobSchema),createJob)
