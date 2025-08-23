@@ -1,22 +1,22 @@
 {
   "compilerOptions": {
-    "module": "nodenext",
-    "target": "esnext",
+    "module": "NodeNext",
+    "moduleResolution": "NodeNext",
+    "target": "ES2022",
     "types": ["node"],
     "sourceMap": true,
     "declaration": true,
     "outDir": "./dist",
-    "rootDir": "./",
+    "rootDir": "./src",
     "strict": true,
-    "jsx": "react-jsx",
-    
     "isolatedModules": true,
     "skipLibCheck": true,
     "noEmit": false,
-
     "esModuleInterop": true,
-    "verbatimModuleSyntax": false, // ← Add this
+    "allowSyntheticDefaultImports": true,
+    "verbatimModuleSyntax": false,
     "preserveValueImports": false
   },
-  "include": ["src","env.ts"]
+  "include": ["src/**/*", "src/env.ts"],
+  "exclude": ["node_modules", "dist"]
 }

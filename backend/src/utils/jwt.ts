@@ -1,6 +1,6 @@
 import { SignJWT, type JWTPayload } from "jose";
 import { createSecretKey } from "crypto";
-import env from "../../env.js";
+import env from "../env.js";
 
 // Extend jose's JWTPayload with your custom fields
 export interface MyJWTPayload extends JWTPayload {

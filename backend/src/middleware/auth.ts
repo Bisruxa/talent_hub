@@ -1,6 +1,6 @@
 import type { Request, Response, NextFunction } from "express";
 import { jwtVerify, type JWTPayload } from "jose";
-import env from "../../env.js";
+import env from "../env.js";
 
 export interface AuthRequest extends Request {
   user?: {

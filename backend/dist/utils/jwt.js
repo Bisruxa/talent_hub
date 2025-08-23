@@ -1,6 +1,6 @@
 import { SignJWT } from "jose";
 import { createSecretKey } from "crypto";
-import env from "../../env.js";
+import env from "../env.js";
 export const generateToken = (payload) => {
     const secret = env.JWT_SECRET;
     const secretKey = createSecretKey(secret, "utf-8");

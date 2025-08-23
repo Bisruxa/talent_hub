@@ -1,5 +1,5 @@
 import { jwtVerify } from "jose";
-import env from "../../env.js";
+import env from "../env.js";
 export const authenticate = async (req, res, next) => {
     try {
         console.log("Auth middleware running, headers:", req.headers.authorization);
