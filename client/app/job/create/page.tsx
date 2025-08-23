@@ -3,7 +3,7 @@
 import { useState, useEffect } from "react";
 import { getJobs, deleteJob, type Job } from "@/lib/mutation";
 import toast, { Toaster } from "react-hot-toast";
-import { FaSun, FaMoon, FaCalendarAlt } from "react-icons/fa";
+import { FaCalendarAlt } from "react-icons/fa";
 import CreateJobModal from "../../components/createPopUp";
 import Sidebar from "../../components/sidebar";
 import Header from "@/app/components/header";
@@ -13,10 +13,9 @@ export default function EmployerDashboard() {
   const [jobs, setJobs] = useState<Job[]>([]);
   const [showForm, setShowForm] = useState(false);
   const [deleting, setDeleting] = useState<string | null>(null);
-  const [darkMode, setDarkMode] = useState(false);
   const [search, setSearch] = useState("");
 
-  const fetchjobs = async () => {
+  const fetchJobs = async () => {
     setLoading(true);
     try {
       const res = await getJobs();
@@ -31,7 +30,7 @@ export default function EmployerDashboard() {
   };
 
   useEffect(() => {
-    fetchjobs();
+    fetchJobs();
   }, []);
 
   const handleDelete = async (jobId: string) => {
@@ -40,7 +39,7 @@ export default function EmployerDashboard() {
     try {
       await deleteJob(jobId);
       toast.success("Job deleted successfully");
-      fetchjobs();
+      fetchJobs();
     } catch (err) {
       if (err instanceof Error)
         toast.error(err.message || "Failed to delete job");
@@ -56,17 +55,17 @@ export default function EmployerDashboard() {
   const skeletons = Array.from({ length: 6 });
 
   return (
-    <div className={`min-h-screen flex bg-gray-100 text-black`}>
+    <div className="min-h-screen flex flex-col md:flex-row bg-gray-100 text-black">
       <Toaster position="top-right" />
 
       {/* Create Job Modal */}
       <CreateJobModal
         isOpen={showForm}
         onClose={() => setShowForm(false)}
-        onCreated={fetchjobs}
+        onCreated={fetchJobs}
       />
 
-      {/* Reusable Sidebar */}
+      {/* Sidebar */}
       <Sidebar
         search={search}
         setSearch={setSearch}
@@ -75,7 +74,7 @@ export default function EmployerDashboard() {
       />
 
       {/* Main content */}
-      <div className="flex-1 flex flex-col ml-64">
+      <div className="flex-1 flex flex-col md:ml-64">
         <Header />
 
         {/* Mobile search bar */}
@@ -91,16 +90,16 @@ export default function EmployerDashboard() {
 
         {/* Main Content */}
         <main className="p-4 md:p-6 flex-1 overflow-auto">
-          <h2 className="text-xl font-semibold mb-4 text-blue-800">
+          <h2 className="text-xl md:text-2xl font-semibold mb-4 text-blue-800">
             Your Job Listings
           </h2>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-6">
+          <div className="grid grid-cols-1 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-6">
             {loading ? (
               skeletons.map((_, idx) => (
                 <div
                   key={idx}
-                  className="p-4 rounded-xl shadow-lg animate-pulse bg-white"
+                  className="p-4 rounded-xl shadow-lg animate-pulse bg-white h-48"
                 >
                   <div className="w-12 h-12 mb-2 rounded-full bg-gray-300" />
                   <div className="h-5 bg-gray-300 rounded mb-2 w-3/4" />
@@ -109,7 +108,9 @@ export default function EmployerDashboard() {
                 </div>
               ))
             ) : filteredJobs.length === 0 ? (
-              <p className="text-gray-700">No jobs created yet.</p>
+              <p className="text-gray-700 col-span-full text-center mt-10">
+                No jobs created yet.
+              </p>
             ) : (
               filteredJobs.map((job) => (
                 <div
@@ -124,6 +125,7 @@ export default function EmployerDashboard() {
                   >
                     {deleting === job.id ? "..." : "🗑️"}
                   </button>
+
                   <div className="w-12 h-12 mb-2 rounded-full bg-blue-100 flex items-center justify-center">
                     <span className="text-blue-800 font-bold">
                       {job.title.charAt(0)}

@@ -1,18 +1,22 @@
 "use client";
+
 import { useEffect, useState } from "react";
 import { getJobs, type Job } from "../../lib/mutation";
-import { FaSun, FaMoon } from "react-icons/fa";
 import Sidebar from "../components/sidebar";
 import JobCard from "../components/cards";
 import Header from "../components/header";
+import ApplyModal from "../components/applyPopUp";
+import Lottie from "lottie-react";
+import empty from "../../public/assets/empty.json";
 
 const HomeDashboard = () => {
   const [jobs, setJobs] = useState<Job[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
-  const [darkMode, setDarkMode] = useState(false);
   const [search, setSearch] = useState("");
   const [selectedRoles, setSelectedRoles] = useState<string[]>([]);
+  const [selectedJob, setSelectedJob] = useState<Job | null>(null);
+  const [appliedJobs, setAppliedJobs] = useState<string[]>([]);
 
   useEffect(() => {
     getJobs()
@@ -21,30 +25,24 @@ const HomeDashboard = () => {
       .finally(() => setLoading(false));
   }, []);
 
-  const toggleRole = (role: string) => {
-    const normalized = role.toLowerCase();
-    setSelectedRoles((prev) =>
-      prev.includes(normalized)
-        ? prev.filter((r) => r !== normalized)
-        : [...prev, normalized]
-    );
+  const openModal = (job: Job) => setSelectedJob(job);
+  const closeModal = () => setSelectedJob(null);
+  const handleApplied = (jobId: string) => {
+    setAppliedJobs([...appliedJobs, jobId]);
+    closeModal();
   };
 
   const filteredJobs = jobs.filter(
     (job) =>
       job.title.toLowerCase().includes(search.toLowerCase()) &&
       (selectedRoles.length === 0 ||
-        selectedRoles.includes(job.role?.toLowerCase()))
+        selectedRoles.includes(job.role?.toLowerCase() ?? ""))
   );
 
   const skeletons = Array.from({ length: 6 });
 
   return (
-    <div
-      className={`${
-        darkMode ? "bg-gray-900 text-white" : "bg-gray-100 text-gray-900"
-      } min-h-screen flex`}
-    >
+    <div className="bg-gray-100 text-gray-900 min-h-screen flex flex-col md:flex-row">
       {/* Sidebar */}
       <Sidebar
         search={search}
@@ -54,57 +52,69 @@ const HomeDashboard = () => {
       />
 
       {/* Main content */}
-      <div className="flex-1 flex flex-col ml-64">
+      <div className="flex-1 flex flex-col md:ml-64">
         {/* Header */}
-        {/* <header className="flex justify-between items-center p-4 border-b border-gray-300">
-          <h2 className="text-3xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-blue-800 to-emerald-500 border-b-4 border items-center justify-center py-1">
-            Talent Hub
-          </h2>
-          <div className="flex items-center gap-4">
-            <button
-              onClick={() => setDarkMode(!darkMode)}
-              className="p-2 rounded-full hover:bg-gray-200 dark:hover:bg-gray-700 transition-colors"
-            >
-              {darkMode ? (
-                <FaSun className="text-yellow-400" />
-              ) : (
-                <FaMoon className="text-gray-600" />
-              )}
-            </button>
-            <div className="flex items-center gap-2">
-              <img
-                src="https://i.pravatar.cc/40"
-                alt="Profile"
-                className="rounded-full w-10 h-10"
-              />
-              <span className="font-medium">Elkan</span>
-            </div>
-          </div>
-        </header> */}
-        <Header></Header>
+        <Header />
+
+        {/* Mobile search bar */}
+        <div className="p-4 border-b border-gray-300 md:hidden">
+          <input
+            type="text"
+            placeholder="Search jobs..."
+            value={search}
+            onChange={(e) => setSearch(e.target.value)}
+            className="w-full p-2 border rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
+          />
+        </div>
 
         {/* Jobs Grid */}
-        <main className="p-6 flex-1 overflow-auto">
-          <h2
-            className="text-xl font-semibold mb-4"
-            style={{ color: "#1E40AF" }}
-          >
+        <main className="p-4 md:p-6 flex-1 overflow-auto">
+          <h2 className="text-xl md:text-2xl font-semibold mb-4 text-blue-900">
             Jobs Listed
           </h2>
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {loading || error
-              ? skeletons.map((_, idx) => (
-                  <div
-                    key={idx}
-                    className="p-4 rounded-xl shadow-lg animate-pulse bg-white"
-                  >
-                    <div className="w-12 h-12 mb-2 rounded-full bg-gray-300" />
-                    <div className="h-5 bg-gray-300 rounded mb-2 w-3/4" />
-                    <div className="h-3 bg-gray-300 rounded mb-4 w-full" />
-                    <div className="h-8 bg-gray-300 rounded w-full" />
-                  </div>
-                ))
-              : filteredJobs.map((job) => <JobCard key={job.id} job={job} />)}
+
+          <div className="grid grid-cols-1 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            {loading ? (
+              skeletons.map((_, idx) => (
+                <div
+                  key={idx}
+                  className="p-4 rounded-xl shadow-lg animate-pulse bg-white h-48"
+                />
+              ))
+            ) : filteredJobs.length > 0 ? (
+              filteredJobs.map((job) => (
+                <JobCard
+                  key={job.id}
+                  job={{
+                    ...job,
+                    appliedByUser: appliedJobs.includes(job.id),
+                  }}
+                  onApply={() => openModal(job)}
+                />
+              ))
+            ) : (
+              <div className="col-span-full flex flex-col items-center justify-center p-6 sm:p-10">
+                <Lottie
+                  animationData={empty}
+                  loop={true}
+                  style={{ width: 250, maxWidth: "80%", height: "auto" }}
+                />
+                <p className="text-gray-600 font-semibold mt-4 text-center">
+                  No jobs found
+                </p>
+              </div>
+            )}
+
+            {/* Apply Modal */}
+            {selectedJob && (
+              <ApplyModal
+                isOpen={!!selectedJob}
+                jobId={selectedJob.id}
+                jobTitle={selectedJob.title}
+                onClose={closeModal}
+                onApplied={() => handleApplied(selectedJob.id)}
+              />
+            )}
           </div>
         </main>
       </div>

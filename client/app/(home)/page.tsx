@@ -1,21 +1,29 @@
+"use client"
 import Link from "next/link";
 import { MdPerson } from "react-icons/md";
+import { useState } from "react";
+import { FaBars, FaTimes } from "react-icons/fa";
 
 const LandingPage = () => {
+  const [menuOpen, setMenuOpen] = useState(false);
+
   return (
     <div className="h-screen bg-white flex flex-col">
-      <div className="flex items-center justify-between px-18 py-4 ">
-        <h2 className="text-3xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-blue-800 to-emerald-500">
+      {/* Navbar */}
+      <div className="flex items-center justify-between px-6 md:px-16 py-4 border-b border-gray-200 relative">
+        <h2 className="text-2xl md:text-3xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-blue-800 to-emerald-500">
           Talent Hub
         </h2>
 
-        <div className="flex space-x-8 text-gray-700 font-medium">
+        {/* Desktop Links */}
+        <div className="hidden md:flex space-x-8 text-gray-700 font-medium">
           <Link href="/">About Us</Link>
           <Link href="/">Blog</Link>
           <Link href="/">Contact Us</Link>
         </div>
 
-        <div>
+        {/* Account Button */}
+        <div className="hidden md:block">
           <Link href="/signup">
             <button className="px-4 py-2 bg-blue-800 text-white rounded-lg hover:bg-emerald-500 transition flex items-center gap-2">
               <MdPerson size={24} />
@@ -23,9 +31,40 @@ const LandingPage = () => {
             </button>
           </Link>
         </div>
+
+        {/* Mobile menu toggle */}
+        <button
+          className="md:hidden text-gray-700 text-2xl"
+          onClick={() => setMenuOpen(!menuOpen)}
+        >
+          {menuOpen ? <FaTimes /> : <FaBars />}
+        </button>
+
+        {/* Mobile Menu */}
+        {menuOpen && (
+          <div className="absolute top-full left-0 w-full bg-white shadow-md flex flex-col items-center space-y-4 py-4 md:hidden z-20 text-black">
+            <Link href="/" onClick={() => setMenuOpen(false)}>
+              About Us
+            </Link>
+            <Link href="/" onClick={() => setMenuOpen(false)}>
+              Blog
+            </Link>
+            <Link href="/" onClick={() => setMenuOpen(false)}>
+              Contact Us
+            </Link>
+            <Link href="/signup" onClick={() => setMenuOpen(false)}>
+              <button className="px-4 py-2 bg-blue-800 text-white rounded-lg flex items-center gap-2">
+                <MdPerson size={20} />
+                My Account
+              </button>
+            </Link>
+          </div>
+        )}
       </div>
 
-      <div className="flex flex-col md:flex-row items-center justify-center h-full px-32 gap-8">
+      {/* Hero Section */}
+      <div className="flex flex-col md:flex-row items-center justify-center flex-1 px-6 md:px-32 gap-8">
+        {/* Text */}
         <div className="flex-1 space-y-6 text-center md:text-left">
           <h1 className="text-3xl md:text-6xl font-bold text-gray-900 leading-tight">
             Where Talent Finds Opportunity
@@ -41,11 +80,12 @@ const LandingPage = () => {
           </Link>
         </div>
 
+        {/* Image */}
         <div className="flex-1 flex justify-center md:justify-end">
           <img
             src="/assets/landing.png"
             alt="Talent Hub Hero"
-            className="w-96 rounded-lg h-auto"
+            className="w-72 md:w-96 rounded-lg h-auto"
           />
         </div>
       </div>

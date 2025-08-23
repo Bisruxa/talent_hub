@@ -9,7 +9,9 @@
     "lint": "eslint"
   },
   "dependencies": {
+    "@next/font": "^14.2.15",
     "jose": "^6.0.13",
+    "lottie-react": "^2.4.1",
     "next": "15.5.0",
     "react": "19.1.0",
     "react-dom": "19.1.0",

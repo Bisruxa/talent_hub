@@ -1,8 +1,9 @@
-"use client"; 
+"use client";
 import React, { useState } from "react";
-import Link from 'next/link'
+import Link from "next/link";
 import { auth } from "@/lib/mutation";
-import {useRouter} from 'next/navigation'
+import { useRouter } from "next/navigation";
+
 interface AuthFormProps {
   mode: "signup" | "signin";
 }
@@ -12,9 +13,9 @@ const AuthForm: React.FC<AuthFormProps> = ({ mode }) => {
     name: "",
     email: "",
     password: "",
-    role:""
+    role: "",
   });
-  const router = useRouter()
+  const router = useRouter();
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
 
@@ -28,56 +29,49 @@ const AuthForm: React.FC<AuthFormProps> = ({ mode }) => {
     e.preventDefault();
     setLoading(true);
     setError("");
-    
 
-   const payload =
-     mode === "signup"
-       ? {
-           name: formData.name,
-           email: formData.email,
-           password: formData.password,
-           role: formData.role,
-         }
-       : { email: formData.email, password: formData.password };
+    const payload =
+      mode === "signup"
+        ? {
+            name: formData.name,
+            email: formData.email,
+            password: formData.password,
+            role: formData.role,
+          }
+        : { email: formData.email, password: formData.password };
 
-console.log("Signup payload:", payload);
-
-   try {
-    console.log("Signup payload:", payload);
-     await auth(mode, payload);
-     if(payload.role === "applicant")
-     {
-router.push("/jobs");
-     }
-     else{
-      router.push("/job/create");
-     }
-   } catch (err) {
-     if (err instanceof Error) setError(err.message);
-   } finally {
-     setLoading(false);
-   }
-
+    try {
+      await auth(mode, payload);
+      if (payload.role === "applicant") {
+        router.push("/jobs");
+      } else {
+        router.push("/job/create");
+      }
+    } catch (err) {
+      if (err instanceof Error) setError(err.message);
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
-    <div className="bg-white h-screen flex flex-col items-center ">
-      <h2 className="text-3xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-blue-800 to-emerald-500 border-b-4 border items-center justify-center py-6">
+    <div className="bg-white min-h-screen flex flex-col items-center justify-center px-4 sm:px-6 lg:px-8">
+      <h2 className="text-3xl md:text-4xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-blue-800 to-emerald-500 mb-4 text-center">
         Talent Hub
       </h2>
-      <hr className="bg-black w-full" />
-      <div className="p-6 border rounded-lg shadow-md bg-white text-black w-96 mt-12">
-        <h2 className="text-2xl font-bold mb-4 text-center">
-          <div className="text-center">
-            <div className="text-lg font-medium">
-              {mode === "signup" ? "Create an Account" : "Welcome Back"}
-            </div>
-            <div className="text-2xl font-bold">
-              {mode === "signup" ? "Sign Up" : "Sign In"}
-            </div>
-          </div>
-        </h2>
-        {error && <p className="text-red-500 mb-3">{error}</p>}
+
+      <div className="w-full max-w-md p-6 border rounded-lg shadow-md bg-white text-black">
+        <div className="mb-6 text-center">
+          <h1 className="text-2xl font-bold">
+            {mode === "signup" ? "Sign Up" : "Sign In"}
+          </h1>
+          <p className="text-gray-600 mt-1">
+            {mode === "signup" ? "Create an Account" : "Welcome Back"}
+          </p>
+        </div>
+
+        {error && <p className="text-red-500 mb-4 text-center">{error}</p>}
+
         <form onSubmit={handleSubmit} className="flex flex-col gap-4">
           {mode === "signup" && (
             <>
@@ -87,29 +81,30 @@ router.push("/jobs");
                 value={formData.name}
                 onChange={handleChange}
                 placeholder="Full Name"
-                className="px-3 py-2 border rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
+                className="px-3 py-2 border rounded focus:outline-none focus:ring-2 focus:ring-blue-500 w-full"
                 required
               />
               <select
                 name="role"
                 value={formData.role}
                 onChange={handleChange}
-                className="px-3 py-2 border rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
+                className="px-3 py-2 border rounded focus:outline-none focus:ring-2 focus:ring-blue-500 w-full"
                 required
               >
                 <option value="">Select Role</option>
-                <option value="employer">Employee</option>
+                <option value="employer">Employer</option>
                 <option value="applicant">Applicant</option>
               </select>
             </>
           )}
+
           <input
             type="email"
             name="email"
             value={formData.email}
             onChange={handleChange}
             placeholder="Email"
-            className="px-3 py-2 border rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
+            className="px-3 py-2 border rounded focus:outline-none focus:ring-2 focus:ring-blue-500 w-full"
             required
           />
           <input
@@ -118,14 +113,14 @@ router.push("/jobs");
             value={formData.password}
             onChange={handleChange}
             placeholder="Password"
-            className="px-3 py-2 border rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
+            className="px-3 py-2 border rounded focus:outline-none focus:ring-2 focus:ring-blue-500 w-full"
             required
           />
 
           <button
             type="submit"
             disabled={loading}
-            className="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700 transition-colors "
+            className="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700 transition-colors w-full"
           >
             {loading
               ? "Processing..."
@@ -133,22 +128,25 @@ router.push("/jobs");
               ? "Sign Up"
               : "Sign In"}
           </button>
-          {mode === "signup" ? (
-            <div className="text-sm text-gray-600 text-center">
-              Already have an account?
-              <Link href="/signin" className="text-blue-600">
-                SignIn
-              </Link>
-            </div>
-          ) : (
-            <div className="text-sm text-gray-600 text-center">
-              Create an account to get started!
-              <Link href="/signup" className="text-blue-600">
-                SignUp
-              </Link>
-            </div>
-          )}
         </form>
+
+        <div className="mt-4 text-sm text-gray-600 text-center">
+          {mode === "signup" ? (
+            <>
+              Already have an account?{" "}
+              <Link href="/signin" className="text-blue-600 font-medium">
+                Sign In
+              </Link>
+            </>
+          ) : (
+            <>
+              Create an account to get started!{" "}
+              <Link href="/signup" className="text-blue-600 font-medium">
+                Sign Up
+              </Link>
+            </>
+          )}
+        </div>
       </div>
     </div>
   );
