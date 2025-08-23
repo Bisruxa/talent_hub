@@ -1,6 +1,8 @@
 "use client";
 import { FaSun, FaMoon } from "react-icons/fa";
 import Link from "next/link";
+import { usePathname } from "next/navigation";
+import {useState,useEffect} from 'react'
 interface HeaderProps {
   darkMode: boolean;
   setDarkMode: (value: boolean) => void;
@@ -9,6 +11,13 @@ interface HeaderProps {
 }
 
 const Header = () => {
+  const pathname = usePathname()
+   const [userName, setUserName] = useState("");
+
+   useEffect(() => {
+     const name = localStorage.getItem("userName");
+     if (name) setUserName(name);
+   }, []);
   return (
     <header className="flex justify-between items-center p-4 border-b border-gray-300">
       <Link href="/">
@@ -16,27 +25,22 @@ const Header = () => {
           Talent Hub
         </h2>
       </Link>
+      {pathname === "/jobs" ? (
+        <div>
+          {" "}
+          <div className="flex items-center  flex-col">
+            <img
+              src={`https://avatars.dicebear.com/api/identicon/placeholder.svg`}
+              alt="Profile"
+              className="rounded-full w-10 h-10"
+            />
 
-      {/* <div className="flex items-center gap-4">
-        <button
-          onClick={() => setDarkMode(!darkMode)}
-          className="p-2 rounded-full hover:bg-gray-200 dark:hover:bg-gray-700 transition-colors"
-        >
-          {darkMode ? (
-            <FaSun className="text-yellow-400" />
-          ) : (
-            <FaMoon className="text-gray-600" />
-          )}
-        </button>
-        <div className="flex items-center gap-2">
-          <img
-            src={userAvatar}
-            alt="Profile"
-            className="rounded-full w-10 h-10"
-          />
-          <span className="font-medium">{userName}</span>
+            <small className="font-medium">{userName}</small>
+          </div>
         </div>
-      </div> */}
+      ) : (
+        <div></div>
+      )}
     </header>
   );
 };

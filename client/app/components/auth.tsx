@@ -41,12 +41,14 @@ const AuthForm: React.FC<AuthFormProps> = ({ mode }) => {
         : { email: formData.email, password: formData.password };
 
     try {
-      await auth(mode, payload);
-      if (payload.role === "applicant") {
-        router.push("/jobs");
-      } else {
-        router.push("/job/create");
-      }
+      const res = await auth(mode, payload);
+
+      // res.user.role comes from the backend
+      const role = res.user.role;
+
+      if (role === "applicant") router.push("/jobs");
+      else if (role === "admin") router.push("/admin");
+      else router.push("/job/create");
     } catch (err) {
       if (err instanceof Error) setError(err.message);
     } finally {

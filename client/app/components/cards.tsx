@@ -23,6 +23,9 @@ export interface JobCardProps {
     _count?: { Applications: number };
   };
   onApply: () => void; // parent function to open modal
+  isAdmin?: boolean;
+  onApprove?: () => void;
+  onReject?: () => void;
 }
 
 const companyIcons = [
@@ -56,7 +59,13 @@ const companyIcons = [
 const getRandomCompany = () =>
   companyIcons[Math.floor(Math.random() * companyIcons.length)];
 
-const JobCard = ({ job, onApply }: JobCardProps) => {
+const JobCard = ({
+  job,
+  onApply,
+  isAdmin,
+  onApprove,
+  onReject,
+}: JobCardProps) => {
   const [applied, setApplied] = useState(job.appliedByUser || false);
   const [currentUserId, setCurrentUserId] = useState<string | null>(null);
   const [company, setCompany] = useState(companyIcons[0]);
@@ -74,7 +83,7 @@ const JobCard = ({ job, onApply }: JobCardProps) => {
   const isDisabled = applied || job.createByUser?.id === currentUserId;
 
   return (
-    <div className="relative bg-white shadow-lg rounded-xl p-6 flex flex-col items-center transition-transform duration-300 hover:-translate-y-1 hover:shadow-2xl">
+    <div className="relative bg-gradient-to-br from-blue-50 via-green-50 to-blue-100 shadow-md rounded-xl p-6 flex flex-col items-center transition-transform duration-300 hover:-translate-y-1 hover:shadow-lg">
       <div className={`mb-4 ${company.color}`}>{company.icon}</div>
       <h3 className="text-xl font-bold text-center">{job.title}</h3>
       <p className="text-gray-700 text-center mt-2">{job.description}</p>
@@ -86,20 +95,37 @@ const JobCard = ({ job, onApply }: JobCardProps) => {
         {job._count?.Applications ?? 0} applicant(s)
       </p>
 
-      <button
-        onClick={onApply} 
-        disabled={isDisabled}
-        className={`mt-4 w-full py-2 rounded font-semibold transition-all duration-150
-          ${
+      {isAdmin ? (
+        <div className="flex gap-2 mt-4">
+          <button
+            onClick={onApprove}
+            className="bg-green-500 text-white px-3 py-1 rounded"
+          >
+            Approve
+          </button>
+          <button
+            onClick={onReject}
+            className="bg-red-500 text-white px-3 py-1 rounded"
+          >
+            Reject
+          </button>
+        </div>
+      ) : (
+        <button
+          onClick={onApply}
+          disabled={isDisabled}
+          className={`mt-4 w-full py-2 rounded font-semibold ${
             applied
               ? "bg-gray-400 text-gray-700 cursor-not-allowed"
               : "bg-green-500 text-white hover:bg-green-600"
           }`}
-      >
-        {applied ? "Applied" : "Apply"}
-      </button>
+        >
+          {applied ? "Applied" : "Apply"}
+        </button>
+      )}
     </div>
   );
 };
+
 
 export default JobCard;

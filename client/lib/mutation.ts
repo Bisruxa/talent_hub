@@ -12,11 +12,13 @@ export const auth = async (
   const url = mode === "signin" ? "/auth/login" : "/auth/register";
   const res = await fetcher<{
     token: string;
-    user: { id: string; name: string; email: string };
+    user: { id: string; name: string; email: string ; role:string};
   }>(url, body);
   if (res.token) {
+    
     localStorage.setItem("token", res.token);
     localStorage.setItem("userId", res.user.id);
+    localStorage.setItem("userName", res.user.name);
   }
 
   return res;
