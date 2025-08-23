@@ -29,7 +29,13 @@ export const register = async (req: Request, res: Response) => {
       name: newUser.name,
      role:newUser.role
     });
-
+  res.cookie("token", token, {
+    httpOnly: true,
+    secure: process.env.NODE_ENV === "production",
+    sameSite: "lax",
+    maxAge: 24 * 60 * 60 * 1000, // 1 day
+    path: "/",
+  });
     res.status(201).json({
       message: "User created successfully",
       user: newUser,
@@ -67,6 +73,13 @@ const user = await prisma.users.findFirst({
       name:user.name,
       role:user.role,
     })
+    res.cookie("token", token, {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === "production",
+      sameSite: "lax",
+      maxAge: 24 * 60 * 60 * 1000, // 1 day
+      path: "/",
+    });
  res.json({
       message: 'Login successful',
       user: {
